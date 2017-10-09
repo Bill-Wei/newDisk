@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.custom.i18n.resources" value="globalResource"/>
+	<package name="netdisk" extends="json-default">
+		<interceptors>
+			<interceptor name="authorization" class="swun.iot.interceptor.AuthorizationInterceptor"/>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="authorization">
+					<param name="ignoreActions">
+						validate_code,register.*,.*login.* 
+					</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack"/>
+		<global-results>
+			<result name="success">/jsp/result_json.jsp</result>
+			<result name="error">/jsp/result_json.jsp</result>
+			<result name="login" type="redirectAction">login_page</result>
+		</global-results>
+		<action name="register" class="swun.iot.action.RegisterAction">
+			<result name="success">/jsp/result.jsp</result>
+			<result name="input">/jsp/register.jsp</result>
+		</action>
+		<action name="login" class="swun.iot.action.LoginAction">
+			<result name="success" type="redirectAction">main_page</result>
+			<result name="input">/jsp/login.jsp</result>
+		</action>
+		<action name="createDir" class="swun.iot.action.CreateDirAction">
+			<result name="success">/jsp/create_dir_result.jsp</result>
+		</action>
+		<action name="dir" class="swun.iot.action.DirAction">
+			<result name="success">/jsp/dir_result.jsp</result>
+		</action>
+		<action name="file" class="swun.iot.action.FileAction">
+			<result name="success">/jsp/file_result.jsp</result>
+		</action>
+		<action name="upload" class="swun.iot.action.UploadAction">
+			<result name="success">/jsp/upload_success.jsp</result>
+		</action>
+		<action name="downloadFile" class="swun.iot.action.DownloadFileAction"/>
+		<action name="downloadMoreFile" class="swun.iot.action.DownloadMoreFileAction"/>
+		<action name="delete" class="swun.iot.action.DeleteAction"></action>
+		
+		<action name="disk" class="swun.iot.action.DeleteAction">
+			<result name="success">/jsp/disk_result.jsp</result>
+		</action>
+		<action name="relogin" class="swun.iot.action.ReloginAction">
+			<result name="success" type="redirectAction">login_page</result>
+		</action>
+		
+		<action name="validate_code" class="swun.iot.action.ValidationCodeAction"/>
+		<!-- 通配符映射jsp页面 -->
+		<action name="*_page">
+			<result>/jsp/{1}.jsp</result>
+		</action>
+	</package>
+</struts>    

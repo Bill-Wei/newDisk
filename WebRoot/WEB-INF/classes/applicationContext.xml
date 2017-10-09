@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd" 
+	xmlns:tx="http://www.springframework.org/schema/tx">
+
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="url" value="jdbc:mysql://localhost:3306/disk"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="admin"></property>
+	</bean>
+	<!-- 指定hibernate的配置文件 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">
+				  true
+				</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>swun/iot/entity/TDirectories.hbm.xml</value>
+				<value>swun/iot/entity/PDirInfo.hbm.xml</value>
+				<value>swun/iot/entity/TUsers.hbm.xml</value>
+				<value>swun/iot/entity/TFiles.hbm.xml</value></list>
+		</property></bean>
+		<!-- 装配HibernateTemplate对象 -->
+		<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+			<property name="sessionFactory" ref="sessionFactory"></property>
+		</bean>
+		
+		<!-- 装配事务拦截器 -->
+		<bean id="transactionInterceptor" 
+			class="org.springframework.transaction.interceptor.TransactionInterceptor">
+			<!-- 为transactionManager属性指定一个事务管理对象 -->	
+			<property name="transactionManager">
+				<ref bean="transactionManager"/>
+			</property>	
+			
+			<!-- 设置事务属性 -->
+			<property name="transactionAttributes">
+				<props>
+					<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+					<prop key="getPDirInfo">PROPAGATION_REQUIRED</prop>
+					<prop key="*">PROPAGATION_REQUIRED</prop>
+				</props>
+			</property>
+		</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- 通过bean名自动代理数据访问层对象 -->
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+	<!-- 指定需要代码类实现的接口 -->
+		<property name="beanNames">
+			<list>
+				<value>userDAO</value>
+				<value>directoryDAO</value>
+				<value>fileDAO</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 下面的代码装配数据访问层类 -->
+	<bean id="userDAO" class="swun.iot.dao.UserDAOImpl">
+		<constructor-arg>
+			<ref bean="hibernateTemplate"/>
+		</constructor-arg>
+	</bean>
+	<bean id="directoryDAO" class="swun.iot.dao.DirectoryDAOImpl">
+		<constructor-arg>
+			<ref bean="hibernateTemplate"/>
+		</constructor-arg>
+	</bean>
+	<bean id="fileDAO" class="swun.iot.dao.FileDAOImpl">
+		<constructor-arg>
+			<ref bean="hibernateTemplate"/>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 下面代码装配业务逻辑层类 -->
+	<bean id="userService" class="swun.iot.service.UserServiceImpl">
+		<constructor-arg>
+			<ref bean="userDAO"/>
+		</constructor-arg>
+	</bean>
+	<bean id="directoryService" class="swun.iot.service.DirectoryServiceImpl">
+		<constructor-arg>
+			<ref bean="directoryDAO"/>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="fileDAO"/>
+		</constructor-arg>
+	</bean>
+	<bean id="fileService" class="swun.iot.service.FileServiceImpl">
+		<constructor-arg>
+			<ref bean="fileDAO"/>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 装配ServiceManager类 -->
+	<bean id="serviceManager" class="swun.iot.service.ServiceManager">
+		<!-- 装配userService属性 -->
+		<property name="userService">
+			<ref bean="userService"/>
+		</property>
+		<!-- 装配directoryService属性 -->
+		<property name="directoryService">
+			<ref bean="directoryService"/>
+		</property>
+		<!-- 装配fileService属性 -->
+		<property name="fileService">
+			<ref bean="fileService"/>
+		</property>
+	</bean>
+	<!-- 指定外部的资源文件，在该文件中配置了网络硬盘的根目录 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>WEB-INF\netdisk.properties</value>
+		</property>
+	</bean>
+	<!-- 装配userInfo类 -->
+	<bean id="userInfo" class="swun.iot.common.UserInfo" scope="prototype">
+		<!-- 从资源文件中读取根目录来初始化root属性 -->
+		<property name="root" value="${disk.root}"></property>
+	</bean>
+	</beans>
+	
+	
