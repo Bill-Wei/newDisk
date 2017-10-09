@@ -23,7 +23,7 @@
 		</div>
 		单机此处<a href="login_page.action">登录</a>
 		<font color="red"> <s:actionerror/> </font>
-		<s:form action="register">
+		<s:form action="register" validate="true">
 			<s:textfield label="用户名" cssClass="input_list" name="user" required="true" value=""/>
 			<s:password label="密码" name="password" cssClass="input_list" required="true"/>
 			<s:password label="请再次输入密码" name="repassword" cssClass="input_list" required="true"/>
