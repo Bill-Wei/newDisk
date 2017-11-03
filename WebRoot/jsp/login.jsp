@@ -19,10 +19,10 @@
 		</div>
 		如果您还没有注册，单机此处<a href="register_page.action">注册</a>
 		<font color="red"><s:actionerror/></font>
-		<s:form action="login">
+		<s:form action="login" validate="true">
 			<s:textfield label="用户名" cssClass="input_list" name="user"/>
 			<s:password label="密码" name="password" cssClass="input_list"/>
-			<s:textfield label="验证码" name="validationCode" cssClass="input_list"/>
+			<s:textfield label="验证码" cssClass="input_list" name="validateCode" required="true"/>
 			<s:submit value="登录"/>
 		</s:form>
 		

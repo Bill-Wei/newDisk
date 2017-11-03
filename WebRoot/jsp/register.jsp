@@ -12,7 +12,7 @@
 <script type="text/javascript">
 	function refresh(){
 		var img = document.getElementById("img_validation_code");
-		img.src = "validation_code.action?"+Math.random();
+		img.src = "validate_code.action?"+Math.random();
 	}
 </script>
 </head>
@@ -31,11 +31,11 @@
 			<s:textfield label="邮箱地址" name="email" cssClass="input_list" value=""/>
 			<s:textfield label="电话" name="phone" cssClass="input_list" value=""/>
 			<s:textfield label="QQ" cssClass="input_list" name="qq" value=""/>
-			<s:textfield label="验证码" name="validationCode" cssClass="input_list"/>
+			<s:textfield label="验证码" cssClass="input_list" name="validateCode" required="true"/>
 			<s:submit value="注册"/>
 		</s:form>
 		
-		用户验证码：<img id="img_validation_code" src="calidation_code.action"/>
+		用户验证码：<img id="img_validation_code" src="validate_code.action"/>
 		<a href="#" onclick="refresh()">重新获取验证码</a>
 	</center>
 	
