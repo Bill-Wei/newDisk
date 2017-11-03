@@ -2,16 +2,16 @@
 <!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
 "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 <validators>
-	<validator type="requiredString">
+	<validator type="requiredstring">
 		<param name="fieldName">user</param>
 		<message>用户名必须输入</message>
 	</validator>
-	<validator type="requiredString">
+	<validator type="requiredstring">
 		<param name="fieldName">password</param>
 		<message>密码必须输入</message>
 	</validator>
-	<validator type="requiredString">
-		<param name="fieldName">validationCode</param>
+	<validator type="requiredstring">
+		<param name="fieldName">validateCode</param>
 		<message>验证码必须输入</message>
 	</validator>
 	<validator type="expression">
@@ -33,10 +33,10 @@
 		<param name="trim">true</param>
 		<message>密码长度必须介于8和30之间</message>
 	</validator>
-	<validator type="requiredString">
+	<!-- <validator type="requiredstring">
 		<param name="fieldName">user</param>
 		<message>用户名必须输入</message>
-	</validator>
+	</validator> -->
 	<validator type="regex">
 		<param name="fieldName">user</param>
 		<param name="expression"><![CDATA[(^\w*$)]]></param>

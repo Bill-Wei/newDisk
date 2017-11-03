@@ -27,17 +27,18 @@ public class LoginAction extends BaseAction implements ModelDriven<TUsers> {
 			return;
 		}
 		//从Session中获得服务端生成的验证码
-		Object obj = ActionContext.getContext().getSession().get("validation code");
+		Object obj = ActionContext.getContext().getSession().get("validation_code");
+		System.out.println(obj.toString());
 		String validationCode = (obj!=null)?obj.toString():"";
 		//判断用户输入的校验码是否正确
 		if (!validationCode.equalsIgnoreCase(user.getValidateCode())) {
 			//如果用户的验证码不正确，添加字段错误
 			if (user.getValidateCode()!=null) {
-				this.addFieldError("validationCode", "验证码输入错误");
+				this.addFieldError("validateCode", "验证码输入错误");
 			}
 		}
 	}
-	
+	@Override
 	//处理用户请求的execute方法
 	public String execute()throws Exception{
 		try{

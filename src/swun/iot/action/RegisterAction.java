@@ -37,7 +37,7 @@ public class RegisterAction extends BaseAction implements ModelDriven<TUsers> {
 		if (!validationCode.equalsIgnoreCase(user.getValidateCode())) {
 			//如果用户的验证码不正确，添加字段错误
 			if (user.getValidateCode()!=null) {
-				this.addFieldError("validationCode", "验证码输入错误");
+				this.addFieldError("validateCode", "验证码输入错误");
 			}
 		}
 	}
@@ -57,6 +57,7 @@ public class RegisterAction extends BaseAction implements ModelDriven<TUsers> {
 			
 		}catch(Exception e){
 			result = e.getMessage();
+			e.printStackTrace();
 			return ERROR;
 		}
 		

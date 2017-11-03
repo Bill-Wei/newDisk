@@ -105,7 +105,7 @@ public class ValidationCodeAction extends ActionSupport implements ServletReques
 		session.setMaxInactiveInterval(5*60);//设置session对象5分钟失效
 //		将验证码保存在session中，key为validation_code
 		session.setAttribute("validation_code", validationCode.toString());
-		
+		System.out.println(validationCode.toString());
 		g.dispose();//关闭graphics对象
 		OutputStream os = response.getOutputStream();
 		ImageIO.write(image, "JPEG", os);//以JPEG的格式想客户端发送图形验证码

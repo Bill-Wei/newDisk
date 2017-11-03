@@ -2,7 +2,7 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
 	<constant name="struts.custom.i18n.resources" value="globalResource"/>
-	<package name="netdisk" extends="json-default">
+	<package name="netdisk" extends="json-default" namespace="/">
 		<interceptors>
 			<interceptor name="authorization" class="swun.iot.interceptor.AuthorizationInterceptor"/>
 			<interceptor-stack name="myStack">
@@ -23,13 +23,16 @@
 		<action name="register" class="swun.iot.action.RegisterAction">
 			<result name="success">/jsp/result.jsp</result>
 			<result name="input">/jsp/register.jsp</result>
+			<result name="error">/jsp/register.jsp</result>
 		</action>
 		<action name="login" class="swun.iot.action.LoginAction">
 			<result name="success" type="redirectAction">main_page</result>
 			<result name="input">/jsp/login.jsp</result>
+			<result name="error">/jsp/login.jsp</result>
 		</action>
 		<action name="createDir" class="swun.iot.action.CreateDirAction">
 			<result name="success">/jsp/create_dir_result.jsp</result>
+			<result name="input">/jsp/register.jsp</result>
 		</action>
 		<action name="dir" class="swun.iot.action.DirAction">
 			<result name="success">/jsp/dir_result.jsp</result>
